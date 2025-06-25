@@ -159,6 +159,16 @@ jobs:
       uses: audacity/audacity-actions/package@v3
       with:
         postfix: ${{ matrix.config.postfix }}
+    - name: Upload artifacts
+      id: upload-linux
+      uses: actions/upload-artifact@v4
+      with:
+        name: linux${{ matrix.config.postfix }}-${{ github.run_id }}-${{ github.run_attempt }}
+        path: |
+          .build.x64/package/*
+          !.build.x64/package/_CPack_Packages
+    - name: Show artifact URL
+      run: echo "Artifact URL: ${{ steps.upload-linux.outputs.artifact-url }}"
 
   build_windows:
     name: ${{ matrix.config.name }}
@@ -223,7 +233,17 @@ jobs:
       uses: audacity/audacity-actions/package@v3
       with:
         postfix: ${{ matrix.config.postfix }}
-  build_macos_intel:
+    - name: Upload artifacts
+      id: upload-windows
+      uses: actions/upload-artifact@v4
+      with:
+        name: windows${{ matrix.config.postfix }}-${{ github.run_id }}-${{ github.run_attempt }}
+        path: |
+          .build.${{ matrix.config.arch }}/package/*
+          !.build.${{ matrix.config.arch }}/package/_CPack_Packages
+    - name: Show artifact URL
+      run: echo "Artifact URL: ${{ steps.upload-windows.outputs.artifact-url }}"
+    build_macos_intel:
     name: Build macOS (x86_64)
     runs-on: macos-13
     steps:
@@ -254,9 +274,12 @@ jobs:
       shell: bash
       run: tar cf macos_intel.tar .build.x64
     - uses: actions/upload-artifact@v4
+      id: upload-macos-intel
       with:
         name: macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
         path: macos_intel.tar
+    - name: Show artifact URL
+      run: echo "Artifact URL: ${{ steps.upload-macos-intel.outputs.artifact-url }}"
   build_macos_arm64:
     name: Build macOS (arm64)
     runs-on: macos-13
@@ -296,9 +319,12 @@ jobs:
       shell: bash
       run: tar cf macos_arm64.tar .build.arm64
     - uses: actions/upload-artifact@v4
+      id: upload-macos-arm64
       with:
         name: macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
         path: macos_arm64.tar
+    - name: Show artifact URL
+      run: echo "Artifact URL: ${{ steps.upload-macos-arm64.outputs.artifact-url }}"
   package_macos:
     name: Package macOS (x86_64, arm64, universal)
     runs-on: macos-13
@@ -345,6 +371,16 @@ jobs:
         archs: |
           x64
           arm64
+    - name: Upload artifacts
+      id: upload-macos
+      uses: actions/upload-artifact@v4
+      with:
+        name: macos-universal-${{ github.run_id }}-${{ github.run_attempt }}
+        path: |
+          .build.x64/package/*
+          !.build.x64/package/_CPack_Packages
+    - name: Show artifact URL
+      run: echo "Artifact URL: ${{ steps.upload-macos.outputs.artifact-url }}"
 
   sources:
     name: Source Tarball
@@ -378,6 +414,7 @@ jobs:
           artifact_name=$(basename "$(ls .build.x64/package/*.tar.gz | head -n 1)" ".tar.gz")
           gh_export SOURCES_ARTIFACT_NAME="${artifact_name}"
     - name: Upload sources
+      id: upload-sources
       uses: actions/upload-artifact@v4
       with:
         name: ${{ env.SOURCES_ARTIFACT_NAME }}
@@ -385,4 +422,6 @@ jobs:
           .build.x64/package/*
           !.build.x64/package/_CPack_Packages
         if-no-files-found: error
+    - name: Show artifact URL
+      run: echo "Artifact URL: ${{ steps.upload-sources.outputs.artifact-url }}"
 
