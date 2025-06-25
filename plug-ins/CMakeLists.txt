@@ -34,6 +34,7 @@ set( SOURCES
    sample-data-import.ny
    spectral-delete.ny
    tremolo.ny
+   gradual-warp.ny
    vocoder.ny
 )
 
