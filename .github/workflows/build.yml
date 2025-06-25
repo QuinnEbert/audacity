@@ -168,7 +168,7 @@ jobs:
           .build.x64/package/*
           !.build.x64/package/_CPack_Packages
     - name: Show artifact URL
-      run: echo "Artifact URL: ${{ steps.upload-linux.outputs.artifact-url }}"
+      run: 'echo "Artifact URL: ${{ steps.upload-linux.outputs.artifact-url }}"'
 
   build_windows:
     name: ${{ matrix.config.name }}
@@ -242,8 +242,8 @@ jobs:
           .build.${{ matrix.config.arch }}/package/*
           !.build.${{ matrix.config.arch }}/package/_CPack_Packages
     - name: Show artifact URL
-      run: echo "Artifact URL: ${{ steps.upload-windows.outputs.artifact-url }}"
-    build_macos_intel:
+      run: 'echo "Artifact URL: ${{ steps.upload-windows.outputs.artifact-url }}"'
+  build_macos_intel:
     name: Build macOS (x86_64)
     runs-on: macos-13
     steps:
@@ -279,7 +279,7 @@ jobs:
         name: macos-intel-${{ github.run_id }}-${{ github.run_attempt }}
         path: macos_intel.tar
     - name: Show artifact URL
-      run: echo "Artifact URL: ${{ steps.upload-macos-intel.outputs.artifact-url }}"
+      run: 'echo "Artifact URL: ${{ steps.upload-macos-intel.outputs.artifact-url }}"'
   build_macos_arm64:
     name: Build macOS (arm64)
     runs-on: macos-13
@@ -324,7 +324,7 @@ jobs:
         name: macos-arm64-${{ github.run_id }}-${{ github.run_attempt }}
         path: macos_arm64.tar
     - name: Show artifact URL
-      run: echo "Artifact URL: ${{ steps.upload-macos-arm64.outputs.artifact-url }}"
+      run: 'echo "Artifact URL: ${{ steps.upload-macos-arm64.outputs.artifact-url }}"'
   package_macos:
     name: Package macOS (x86_64, arm64, universal)
     runs-on: macos-13
@@ -380,7 +380,7 @@ jobs:
           .build.x64/package/*
           !.build.x64/package/_CPack_Packages
     - name: Show artifact URL
-      run: echo "Artifact URL: ${{ steps.upload-macos.outputs.artifact-url }}"
+      run: 'echo "Artifact URL: ${{ steps.upload-macos.outputs.artifact-url }}"'
 
   sources:
     name: Source Tarball
@@ -423,5 +423,5 @@ jobs:
           !.build.x64/package/_CPack_Packages
         if-no-files-found: error
     - name: Show artifact URL
-      run: echo "Artifact URL: ${{ steps.upload-sources.outputs.artifact-url }}"
+      run: 'echo "Artifact URL: ${{ steps.upload-sources.outputs.artifact-url }}"'
 
